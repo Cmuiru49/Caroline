@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Healthcare Decision Support System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <div class="min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-blue-500 shadow-md p-4">
+      <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center w-full">
+          <ul class="flex justify-center space-x-6 text-white-600 font-medium hidden md:flex">
+            <li><a href="/index.html" class="hover:underline">Home</a></li>
+            <li><a href="about.html" class="hover:underline">About</a></li>
+            <li><a href="contact.html" class="hover:underline">Contact</a></li>
+          </ul>
+          <button id="mobile-menu-button" class="block md:hidden text-white focus:outline-none">☰</button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden">
+        <ul class="flex flex-col space-y-2 mt-2">
+          <li><a href="/index.html" class="block hover:underline text-white">Home</a></li>
+          <li><a href="about.html" class="block hover:underline text-white">About</a></li>
+          <li><a href="contact.html" class="block hover:underline text-white">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Toast Notification -->
+    <div id="toast-container" class="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 space-y-2">
+      <!-- Toasts will appear here -->
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white text-black text-center py-6">
+      <h1 class="text-3xl font-bold">Contact Us</h1>
+      <p class="text-lg">We would love to hear from you!</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6">
+      <!-- Contact Form -->
+      <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">Get in Touch</h2>
+        <form id="contact-form" class="space-y-4">
+          <div>
+            <label for="name" class="block text-gray-700">Name</label>
+            <input type="text" id="name" name="name" class="w-full border border-gray-300 rounded-lg p-2" required>
+          </div>
+          <div>
+            <label for="email" class="block text-gray-700">Email</label>
+            <input type="email" id="email" name="email" class="w-full border border-gray-300 rounded-lg p-2" required>
+          </div>
+          <div>
+            <label for="number" class="block text-gray-700">Phone No</label>
+            <input type="number" id="number" name="number" class="w-full border border-gray-300 rounded-lg p-2" required>
+          </div>
+          <div>
+            <label for="message" class="block text-gray-700">Message</label>
+            <textarea id="message" name="message" rows="4" class="w-full border border-gray-300 rounded-lg p-2" required></textarea>
+          </div>
+          <button type="submit" class="w-full bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600">Submit</button>
+        </form>
+      </section>
+
+      <!-- Location -->
+      <section class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">Our Location</h2>
+        <p class="text-gray-700">Murang'a Town, Murang'a General Hospital, Kenya</p>
+        <div class="mt-4">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15957.986994670757!2d37.15722642627351!3d-0.7274495529894245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1828a661289cde11%3A0x21a6ba753626a04f!2sMurang'a%20County%20Referral%20Hospital!5e0!3m2!1sen!2ske!4v1737965079612!5m2!1sen!2ske" 
+            width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4">
+      <p class="text-sm">&copy; 2025 Healthcare DSS. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile Menu Toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function () {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Handle form submission
+    document.getElementById('contact-form').addEventListener('submit', async function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      // Simulated API call (replace this with your real API logic)
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Mock API delay
+        showToast('Message sent successfully!', 'bg-green-500');
+        
+        // Clear form after submission
+        document.getElementById('contact-form').reset();
+      } catch (error) {
+        showToast('Message not sent due to network errors.', 'bg-red-500');
+      }
+    });
+
+    // Function to show toast messages
+    function showToast(message, bgColor) {
+      const toast = document.createElement('div');
+      toast.className = `px-4 py-2 rounded-lg shadow-md text-white ${bgColor}`;
+      toast.textContent = message;
+
+      const toastContainer = document.getElementById('toast-container');
+      toastContainer.appendChild(toast);
+
+      // Remove the toast after 3 seconds
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

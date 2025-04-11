@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>St. Gabriel Mission Hospital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+
+    .modal-footer {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .close {
+      cursor: pointer;
+      color: #3182ce;
+      transition: color 0.2s;
+    }
+
+    .close:hover {
+      color: #2b6cb0;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="min-h-screen flex flex-col">
+    <nav class="bg-blue-500 shadow-md p-4">
+      <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center w-full">
+          <ul class="flex justify-center space-x-6 text-white-600 font-medium hidden md:flex">
+            <li><a href="/index.html" class="hover:underline">Home</a></li>
+            <li><a href="Medical/about.html" class="hover:underline">About</a></li>
+            <li><a href="Medical/contact.html" class="hover:underline">Contact</a></li>
+          </ul>
+          <button id="mobile-menu-button" class="block md:hidden text-white focus:outline-none">☰</button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden">
+        <ul class="flex flex-col space-y-2 mt-2">
+          <li><a href="/index.html" class="block hover:underline text-white">Home</a></li>
+          <li><a href="Medical/about.html" class="block hover:underline text-white">About</a></li>
+          <li><a href="Medical/contact.html" class="block hover:underline text-white">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="bg-white text-black text-center py-6">
+      <h1 class="text-3xl font-bold">Welcome to St. Gabriel Mission Hospital Decision Support system</h1>
+      <p class="text-lg">Your trusted companion for quick and accurate medical guidance.</p>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center p-4">
+      <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="flex-1 mb-4 md:mb-0">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq7at82dcfB_5BEgyUBvMVTxa5JXUePfWhIw&s"
+              alt="Healthcare Image" class="w-full h-auto rounded-lg mb-4 md:mb-0">
+          </div>
+          <div class="flex-1 text-center md:text-left">
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">St. Gabriel Mission Hospital</h2>
+            <p class="text-gray-600 text-center mb-6">Enter your symptoms below to receive possible diagnoses and
+              solutions.</p>
+
+            <form id="dss-form" class="space-y-4 ml-2 flex flex-col md:flex-row items-center">
+              <div class="flex-1 mb-2 md:mb-0">
+                <label for="symptoms" class="block text-gray-700 font-medium">Symptoms:</label>
+                <input type="text" id="symptoms"
+                  class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="e.g., fever, headache, nausea" />
+              </div>
+              <button type="button" id="menu-button"
+                class="bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600">
+                Menu
+              </button>
+            </form>
+
+            <button type="button" id="diagnose-button"
+              class="w-full bg-blue-500 text-white font-medium py-2 mt-4 rounded-lg hover:bg-blue-600">
+              Get Diagnosis
+            </button>
+
+            <div id="symptom-menu" class="bg-purple-500 text-white text-center p-4 mt-2 hidden">
+              <ul class="space-y-2">
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="fever">Fever</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="headache">Headache</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="nausea">Nausea</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="cough">Cough</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="fatigue">Fatigue</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="sore throat">Sore Throat</a>
+                </li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="vomiting">Vomiting</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="diarrhea">Diarrhea</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="chest pain">Chest Pain</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="shortness of breath">Shortness
+                    of Breath</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="rash">Rash</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="dizziness">Dizziness</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="itchy eyes">Itchy Eyes</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="joint pain">Joint Pain</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="stomach ache">Stomach Ache</a>
+                </li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="back pain">Back Pain</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="chills">Chills</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="night sweats">Night Sweats</a>
+                </li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="swollen lymph nodes">Swollen
+                    Lymph Nodes</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="loss of appetite">Loss of
+                    Appetite</a></li>
+                <li><a href="#" class="block hover:underline symptom-item" data-symptom="blurred vision">Blurred
+                    Vision</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="results" class="mt-6 hidden">
+          <h2 class="text-xl font-bold mb-4 text-green-600">Possible Diagnoses:</h2>
+          <ul id="diagnosis-list" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+          <p class="text-gray-600 mt-4">For severe or persistent symptoms, please visit your nearest healthcare center
+            for professional assistance.</p>
+        </div>
+
+        <div class="bg-blue-100 text-blue-600 p-4 mt-6 rounded-lg">
+          <h2 class="text-lg font-bold">SHA (NHIF) Services:</h2>
+          <p class="mt-2">The NHIF provides financial coverage for consultations and treatments, enabling you to access
+            healthcare services easily.</p>
+          <h3 class="font-semibold mt-4">NHIF Benefits:</h3>
+          <ul class="list-disc list-inside mt-2">
+            <li>Inpatient and outpatient services coverage.</li>
+            <li>Access to a wide range of healthcare providers and facilities.</li>
+            <li>Preventive healthcare services to promote overall wellness.</li>
+            <li>Support for both chronic and acute care needs.</li>
+          </ul>
+          <p class="mt-4">To learn more about how to enroll and utilize your NHIF benefits, visit your nearest NHIF
+            office or check their website.</p>
+          <div id="tip" class="mt-4 text-lg font-bold"></div>
+        </div>
+
+        <script>
+          const tips = [
+            "Did you know? NHIF covers a wide range of outpatient services, including consultations and treatments.",
+            "Tip: Enrolling in NHIF not only gives you medical coverage but also protects your family.",
+            "Interesting Fact: NHIF supports over 9 million members with various health services across the country.",
+            "Reminder: Always carry your NHIF card when visiting a healthcare facility to enjoy benefits.",
+            "Health Check: Regular check-ups are essential! NHIF promotes preventive health services to keep you healthy."
+          ];
+
+          function showRandomTip() {
+            const randomIndex = Math.floor(Math.random() * tips.length);
+            const tipElement = document.getElementById('tip');
+            tipElement.textContent = tips[randomIndex];
+          }
+
+          showRandomTip();
+        </script>
+
+      </div>
+
+      <div class="w-full p-4 mt-6">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">Common Health Issues in Kenyan Provinces</h2>
+        <canvas id="healthIssuesChart" class="w-full h-64 md:h-64"></canvas>
+      </div>
+
+      <script>
+        const ctx = document.getElementById('healthIssuesChart').getContext('2d');
+        const healthIssuesChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Nairobi', 'Central', 'Coast', 'Eastern', 'North Eastern', 'Nyanza', 'Rift Valley', 'Western'],
+            datasets: [
+              {
+                label: 'HIV',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                data: [20, 10, 15, 5, 10, 15, 10, 20],
+              },
+              {
+                label: 'Cancer',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                data: [15, 20, 5, 10, 15, 5, 20, 10],
+              },
+              {
+                label: 'Diabetes',
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                data: [5, 15, 10, 10, 20, 10, 7, 15],
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Cases'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Health Issues by Province by end of 2024'
+              }
+            }
+          }
+        });
+      </script>
+
+      <div class="w-full p-4 mt-2">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">Common Health Issues</h2>
+
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/3 lg:w-1/4 flex flex-col h-full">
+            <h3 class="text-xl font-bold text-purple-600">Cancer</h3>
+            <p class="text-gray-600">A disease caused by uncontrolled division of abnormal cells.</p>
+            <ul class="list-disc list-inside text-gray-700 mt-2 flex-grow">
+              <li><strong>Signs:</strong> Lumps, unexplained weight loss, fatigue.</li>
+              <li><strong>Prevention:</strong> Avoid smoking, maintain a healthy diet, regular screenings.</li>
+              <li><strong>What to Do:</strong> Seek medical advice, consider treatments like chemotherapy.</li>
+            </ul>
+          </div>
+
+          <div class="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/3 lg:w-1/4 flex flex-col h-full">
+            <h3 class="text-xl font-bold text-purple-500">HIV/AIDS</h3>
+            <p class="text-gray-600">A virus that attacks the immune system.</p>
+            <ul class="list-disc list-inside text-gray-700 mt-2 flex-grow">
+              <li><strong>Signs:</strong> Fever, sore throat, swollen lymph nodes.</li>
+              <li><strong>Prevention:</strong> Use protection during intercourse, avoid sharing needles.</li>
+              <li><strong>What to Do:</strong> Consult a healthcare provider, follow prescribed treatments.</li>
+            </ul>
+          </div>
+
+          <div class="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/3 lg:w-1/4 flex flex-col h-full">
+            <h3 class="text-xl font-bold text-purple-500">Diabetes</h3>
+            <p class="text-gray-600">A chronic condition affecting blood sugar regulation.</p>
+            <ul class="list-disc list-inside text-gray-700 mt-2 flex-grow">
+              <li><strong>Signs:</strong> Increased thirst, frequent urination, fatigue.</li>
+              <li><strong>Prevention:</strong> Maintain a healthy diet, exercise regularly, monitor sugar levels.</li>
+              <li><strong>What to Do:</strong> Consult a doctor, manage diet, take insulin if prescribed.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4">
+      <p class="text-sm">Quick Solutions for Common Problems:</p>
+      <ul class="flex flex-col md:flex-row justify-between w-full px-6 space-y-2 md:space-y-0">
+        <div class="flex flex-col space-y-1">
+          <li>Practice good hygiene to prevent infections.</li>
+          <li>Stay hydrated and get plenty of rest.</li>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <li>Maintain a healthy diet and exercise regularly.</li>
+          <li>Consult a doctor for persistent symptoms.</li>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <li>Wash hands regularly, especially before eating.</li>
+          <li>Avoid smoking and limit alcohol consumption.</li>
+        </div>
+      </ul>
+      <p class="text-xs mt-2">&copy; 2025 St. Gabriel Mission Hospital. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Modal Structure -->
+  <div id="diagnosis-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Diagnosis Details</div>
+      <div id="modal-body" class="mb-4"></div>
+      <div class="modal-footer">
+        <span class="close" onclick="closeModal()">Close</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('menu-button').addEventListener('click', function () {
+      const menu = document.getElementById('symptom-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    document.getElementById('mobile-menu-button').addEventListener('click', function () {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    const symptomItems = document.querySelectorAll('.symptom-item');
+    symptomItems.forEach(item => {
+      item.addEventListener('click', function () {
+        const symptom = this.getAttribute('data-symptom');
+        const symptomsInput = document.getElementById('symptoms');
+        symptomsInput.value = symptom;
+        document.getElementById('symptom-menu').classList.add('hidden');
+      });
+    });
+
+    // Diagnosis data with solutions, signs, and explanations
+    const diagnosisData = {
+      fever: {
+        possibleDiagnoses: ["Malaria", "Flu", "COVID-19"],
+        signs: {
+          Malaria: "High fever with chills and sweating, often cyclical.",
+          Flu: "Sudden onset of fever, body aches, and fatigue.",
+          "COVID-19": "Fever with cough, shortness of breath, and loss of taste or smell."
+        },
+        solutions: {
+          Malaria: "Seek immediate medical attention for diagnostic testing and treatment with antimalarial medications.",
+          Flu: "Rest and stay hydrated; antiviral medications may be prescribed to reduce severity.",
+          "COVID-19": "Follow isolation guidelines and obtain testing; seek medical advice if symptoms worsen."
+        }
+      },
+      headache: {
+        possibleDiagnoses: ["Migraine", "Tension Headache", "Sinusitis"],
+        signs: {
+          Migraine: "Intense, throbbing pain, often on one side; may include nausea and aura.",
+          "Tension Headache": "Dull, aching sensation all over the head; no nausea.",
+          Sinusitis: "Pain and pressure in the sinuses, often accompanied by nasal discharge."
+        },
+        solutions: {
+          Migraine: "Use prescribed triptans or pain relief medications and identify triggers to avoid future episodes.",
+          "Tension Headache": "Practice relaxation techniques and consider physical therapy to manage muscle tension.",
+          Sinusitis: "Use nasal saline rinses and decongestants for relief; antibiotics may be prescribed if bacterial."
+        }
+      },
+      nausea: {
+        possibleDiagnoses: ["Food Poisoning", "Motion Sickness", "Gastritis"],
+        signs: {
+          "Food Poisoning": "Rapid onset of nausea accompanied by diarrhea and vomiting.",
+          "Motion Sickness": "Nausea triggered by movement; dizziness may also occur.",
+          Gastritis: "Nausea with stomach discomfort or burning sensation after eating."
+        },
+        solutions: {
+          "Food Poisoning": "Rest and stay hydrated; consider anti-nausea medications if symptoms persist.",
+          "Motion Sickness": "Use over-the-counter motion sickness medication prior to travel and avoid heavy meals.",
+          Gastritis: "Avoid irritant foods and consider proton pump inhibitors for stomach acid control."
+        }
+      },
+      cough: {
+        possibleDiagnoses: ["Common Cold", "Bronchitis", "Pneumonia"],
+        signs: {
+          "Common Cold": "Mild cough with clear mucus and other upper respiratory symptoms.",
+          Bronchitis: "Persistent cough with thick mucus; may include wheezing.",
+          Pneumonia: "Cough with green or rusty sputum; fever and difficulty breathing may be present."
+        },
+        solutions: {
+          "Common Cold": "Rest, hydrate, and use over-the-counter medications for symptom relief.",
+          Bronchitis: "Consider cough suppressants and bronchodilators for persistent symptoms.",
+          Pneumonia: "Seek urgent medical care and follow your doctor's prescribed antibiotic regimen."
+        }
+      },
+      fatigue: {
+        possibleDiagnoses: ["Anemia", "Hypothyroidism", "Chronic Fatigue Syndrome"],
+        signs: {
+          Anemia: "Fatigue with pale skin and weakness; shortness of breath during exertion.",
+          Hypothyroidism: "Fatigue with weight gain, cold intolerance, and dry skin.",
+          "Chronic Fatigue Syndrome": "Severe fatigue lasting more than six months; post-exertional malaise."
+        },
+        solutions: {
+          Anemia: "Increase dietary iron through food or supplements and follow up with blood tests for monitoring.",
+          Hypothyroidism: "Begin thyroid hormone replacement therapy and regularly monitor hormone levels.",
+          "Chronic Fatigue Syndrome": "Engage in a structured treatment plan that includes behavioral therapy and graded exercise."
+        }
+      },
+      "sore throat": {
+        possibleDiagnoses: ["Tonsillitis", "Pharyngitis", "Strep Throat"],
+        signs: {
+          Tonsillitis: "Swollen tonsils with white patches; may include difficulty swallowing.",
+          Pharyngitis: "Red and swollen throat, often with cough and hoarseness.",
+          "Strep Throat": "Sudden onset of severe throat pain, fever, and swollen lymph nodes."
+        },
+        solutions: {
+          Tonsillitis: "Antibiotic therapy if bacterial; consider tonsillectomy for recurrent cases.",
+          Pharyngitis: "Gargle salt water and use throat sprays for symptomatic relief.",
+          "Strep Throat": "Follow a prescribed course of antibiotics to eliminate the infection and reduce complications."
+        }
+      },
+      vomiting: {
+        possibleDiagnoses: ["Gastroenteritis", "Pregnancy", "Appendicitis"],
+        signs: {
+          Gastroenteritis: "Nausea and vomiting with diarrhea; often caused by infection.",
+          Pregnancy: "Nausea, often in the morning; may include cravings and aversions.",
+          Appendicitis: "Nausea with referred pain in the lower right abdomen."
+        },
+        solutions: {
+          Gastroenteritis: "Stay hydrated with oral rehydration solutions; consult a healthcare provider if severe.",
+          Pregnancy: "Consider dietary adjustments and vitamin B6 supplementation to alleviate nausea.",
+          Appendicitis: "Seek immediate medical attention for potential surgical intervention."
+        }
+      },
+      diarrhea: {
+        possibleDiagnoses: ["Cholera", "Irritable Bowel Syndrome", "Food Poisoning"],
+        signs: {
+          Cholera: "Severe, watery diarrhea and dehydration, often after consuming contaminated water.",
+          "Irritable Bowel Syndrome": "Cramping, change in bowel habits; may alternate between diarrhea and constipation.",
+          "Food Poisoning": "Diarrhea with nausea and vomiting, usually after eating contaminated food."
+        },
+        solutions: {
+          Cholera: "Seek immediate medical attention and receive intravenous fluids for severe dehydration.",
+          "Irritable Bowel Syndrome": "Implement dietary changes, mindfulness practices, and consider medications tailored to symptoms.",
+          "Food Poisoning": "Monitor symptoms and rest; medical evaluation may be needed for severe cases."
+        }
+      },
+      "chest pain": {
+        possibleDiagnoses: ["Heart Attack", "Angina", "GERD"],
+        signs: {
+          "Heart Attack": "Crushing chest pain with radiating pain to the arm or jaw; sweating and nausea may occur.",
+          Angina: "Chest pain or discomfort during physical activity; tends to resolve with rest.",
+          GERD: "Burning sensation in the chest, often after meals; may include regurgitation."
+        },
+        solutions: {
+          "Heart Attack": "Call emergency services immediately; aspirin may help while waiting for assistance.",
+          Angina: "Use prescribed nitroglycerin for immediate relief and consult a cardiologist for further management.",
+          GERD: "Implement dietary changes and take proton pump inhibitors as advised by a healthcare provider."
+        }
+      },
+      "shortness of breath": {
+        possibleDiagnoses: ["Asthma", "COPD", "Pulmonary Embolism"],
+        signs: {
+          Asthma: "Wheezing and coughing, particularly at night or during exercise.",
+          COPD: "Progressive breathlessness; chronic cough with sputum production.",
+          "Pulmonary Embolism": "Sudden shortness of breath with chest pain; may cough up blood."
+        },
+        solutions: {
+          Asthma: "Use a rescue inhaler and have a written asthma action plan tailored to personal triggers.",
+          COPD: "Engage in pulmonary rehabilitation and use bronchodilators as prescribed.",
+          "Pulmonary Embolism": "Seek emergency care for antithrombotic treatment and possibly hospitalization."
+        }
+      },
+      "rash": {
+        possibleDiagnoses: ["Allergic Reaction", "Eczema", "Chickenpox"],
+        signs: {
+          "Allergic Reaction": "Sudden onset of hives or welts; may include swelling of the face or lips.",
+          Eczema: "Chronic itchy rash, often in the creases of the elbows and knees.",
+          "Chickenpox": "Itchy, blister-like rash that progresses to scabs."
+        },
+        solutions: {
+          "Allergic Reaction": "Take antihistamines to reduce symptoms; seek emergency help for severe reactions.",
+          Eczema: "Use topical corticosteroids and moisturizers; identify and avoid triggers.",
+          "Chickenpox": "Consult a healthcare provider for antiviral treatments and focus on symptom relief."
+        }
+      },
+      "dizziness": {
+        "possibleDiagnoses": ["Dehydration", "Low Blood Pressure", "Vertigo"],
+        "signs": {
+          "Dehydration": "Dry mouth, excessive thirst, and feeling lightheaded or faint.",
+          "Low Blood Pressure": "Sudden dizziness when standing up, blurred vision, and fatigue.",
+          "Vertigo": "Spinning sensation, loss of balance, and nausea."
+        },
+        "solutions": {
+          "Dehydration": "Drink plenty of water and replenish electrolytes; avoid excessive caffeine or alcohol.",
+          "Low Blood Pressure": "Increase salt intake, stay hydrated, and rise slowly from a seated position.",
+          "Vertigo": "Perform balance exercises, avoid sudden head movements, and consult a doctor for medication if needed."
+        }
+      },
+      "itchy eyes": {
+        "possibleDiagnoses": ["Allergic Conjunctivitis", "Dry Eye Syndrome", "Pink Eye"],
+        "signs": {
+          "Allergic Conjunctivitis": "Red, watery, and itchy eyes often triggered by allergens.",
+          "Dry Eye Syndrome": "Burning sensation, grittiness, and sensitivity to light.",
+          "Pink Eye": "Redness, discharge, and irritation that may spread to both eyes."
+        },
+        "solutions": {
+          "Allergic Conjunctivitis": "Use antihistamine eye drops and avoid exposure to allergens.",
+          "Dry Eye Syndrome": "Apply artificial tears, use a humidifier, and take breaks from screen time.",
+          "Pink Eye": "Maintain eye hygiene, avoid touching your eyes, and consult a doctor for antibiotic drops if bacterial."
+        }
+      },
+      "joint pain": {
+        possibleDiagnoses: ["Arthritis", "Gout", "Lupus"],
+        signs: {
+          Arthritis: "Joint stiffness and swelling, particularly after inactivity.",
+          Gout: "Intense pain in one joint, often the big toe; redness and swelling.",
+          Lupus: "Joint pain with a characteristic butterfly rash on the face and fatigue."
+        },
+        solutions: {
+          Arthritis: "Implement a structured exercise program and consider disease-modifying antirheumatic drugs (DMARDs).",
+          Gout: "Follow a low-purine diet and take medications to manage uric acid levels.",
+          Lupus: "Follow a tailored treatment plan from a rheumatologist, including immunosuppressive therapy."
+        }
+      },
+      "stomach ache": {
+        possibleDiagnoses: ["Ulcer", "Gastritis", "Appendicitis"],
+        signs: {
+          Ulcer: "Burning stomach pain that improves with eating; may include bloating.",
+          Gastritis: "Nausea and discomfort in the upper abdomen; may worsen with spicy foods.",
+          Appendicitis: "Intense pain in the lower right abdomen; may include fever and vomiting."
+        },
+        solutions: {
+          Ulcer: "Consult a healthcare provider for proton pump inhibitors and antibiotics if needed.",
+          Gastritis: "Avoid irritant foods; use antacids or medications for acid reduction as needed.",
+          Appendicitis: "Seek emergency treatment for assessment and possible surgical intervention."
+        }
+      },
+      "back pain": {
+        possibleDiagnoses: ["Herniated Disc", "Muscle Strain", "Arthritis"],
+        signs: {
+          "Herniated Disc": "Pain radiating down the leg; may cause numbness or tingling.",
+          "Muscle Strain": "Pain localized to the back; often linked to an activity or movement.",
+          Arthritis: "Chronic pain with stiffness; may worsen with inactivity."
+        },
+        solutions: {
+          "Herniated Disc": "Follow a physical therapy regimen; surgical interventions may be considered if conservative measures fail.",
+          "Muscle Strain": "Apply ice and rest; over-the-counter pain relief can help reduce discomfort.",
+          Arthritis: "Adapt lifestyle changes and engage in a maintenance physiotherapy program tailored to your needs."
+        }
+      },
+      "chills": {
+        possibleDiagnoses: ["Malaria", "Flu", "COVID-19"],
+        signs: {
+          Malaria: "Chills accompanied by sweating and high fever; may occur in cycles.",
+          Flu: "Chills with body aches and fatigue; sudden onset.",
+          "COVID-19": "Chills with fever, cough, and possible loss of taste or smell."
+        },
+        solutions: {
+          Malaria: "Immediate medical attention required for diagnostic tests and treatment.",
+          Flu: "Over-the-counter analgesics to reduce fever and body aches; rest and hydration are essential.",
+          "COVID-19": "Self-isolate and follow health protocols; consult healthcare providers as needed."
+        }
+      },
+      "night sweats": {
+        possibleDiagnoses: ["Tuberculosis", "Hyperthyroidism", "Lymphoma"],
+        signs: {
+          Tuberculosis: "Night sweats accompanied by cough, weight loss, and fatigue.",
+          Hyperthyroidism: "Night sweats with rapid heartbeat and heat intolerance.",
+          Lymphoma: "Night sweats with unexplained fever and swollen lymph nodes."
+        },
+        solutions: {
+          Tuberculosis: "Immediate medical evaluation, followed by a course of antibiotics.",
+          Hyperthyroidism: "Medication to manage thyroid hormone levels and regular monitoring.",
+          Lymphoma: "Seek specialized treatment from an oncologist, which may include chemotherapy or radiotherapy."
+        }
+      },
+      "swollen lymph nodes": {
+        possibleDiagnoses: ["Infection", "Mononucleosis", "Cancer"],
+        signs: {
+          Infection: "Local pain and tenderness; may accompany other infection signs.",
+          Mononucleosis: "Fatigue, sore throat, and fever paralleling swollen lymph nodes.",
+          Cancer: "Persistent swollen lymph nodes; may be accompanied by unexplained weight loss."
+        },
+        solutions: {
+          Infection: "Follow up with a healthcare provider to determine the underlying cause and appropriate treatment.",
+          Mononucleosis: "Rest, stay hydrated, and avoid physical activities that may risk spleen rupture.",
+          Cancer: "Seek immediate evaluation and establish a treatment plan based on specific diagnosis and stage."
+        }
+      },
+      "loss of appetite": {
+        possibleDiagnoses: ["Depression", "Gastrointestinal Disorder", "Hepatitis"],
+        signs: {
+          Depression: "Persistent sadness and loss of interest in activities; emotional changes.",
+          "Gastrointestinal Disorder": "Nausea or discomfort after eating; may involve abdominal pain.",
+          Hepatitis: "Loss of appetite with jaundice and abdominal discomfort."
+        },
+        solutions: {
+          Depression: "Engage in counseling and consider medication as advised by a mental health professional.",
+          "Gastrointestinal Disorder": "Consult a healthcare provider for diagnostic testing and personalized treatment.",
+          Hepatitis: "Regular monitoring and treatment plan tailored to the type of hepatitis diagnosed."
+        }
+      },
+      "blurred vision": {
+        possibleDiagnoses: ["Diabetes", "Glaucoma", "Cataracts"],
+        signs: {
+          Diabetes: "Blurred vision fluctuating with blood sugar levels; may include diabetic retinopathy.",
+          Glaucoma: "Gradual loss of peripheral vision; may have eye pain and headaches.",
+          Cataracts: "Cloudy vision with difficulty seeing at night and glare sensitivity."
+        },
+        solutions: {
+          Diabetes: "Strict control of blood sugar levels and routine ophthalmologic exams are crucial.",
+          Glaucoma: "Regular use of prescribed eye drops and monitoring to prevent vision loss.",
+          Cataracts: "Consult an ophthalmologist for evaluation and potential surgical intervention."
+        }
+      }
+    };
+
+    const diagnoseButton = document.getElementById('diagnose-button');
+    const resultsSection = document.getElementById('results');
+    const diagnosisList = document.getElementById('diagnosis-list');
+
+    diagnoseButton.addEventListener('click', () => {
+      const symptomsInput = document.getElementById('symptoms').value.toLowerCase();
+      const symptoms = symptomsInput.split(',').map(s => s.trim());
+      const possibleDiagnoses = new Set();
+
+      symptoms.forEach(symptom => {
+        if (diagnosisData[symptom]) {
+          diagnosisData[symptom].possibleDiagnoses.forEach(condition => possibleDiagnoses.add(condition));
+        }
+      });
+
+      diagnosisList.innerHTML = '';
+      if (possibleDiagnoses.size > 0) {
+        resultsSection.classList.remove('hidden');
+        possibleDiagnoses.forEach(condition => {
+          const li = document.createElement('li');
+          li.textContent = condition;
+          li.classList.add('diagnosis-item', 'cursor-pointer', 'hover:underline');
+          diagnosisList.appendChild(li);
+
+          // Add click event for each diagnosis to show details
+          li.addEventListener('click', () => {
+            displayDetails(condition, symptoms);
+          });
+        });
+      } else {
+        resultsSection.classList.remove('hidden');
+        diagnosisList.innerHTML = '<li>No diagnoses found for the symptoms provided.</li>';
+      }
+    });
+
+    function displayDetails(condition, symptoms) {
+      const diagnosisInfo = diagnosisData[symptoms[0]];
+      const signs = diagnosisInfo.signs[condition];
+      const solutionText = diagnosisInfo.solutions[condition] || "Consult a healthcare professional for further assistance.";
+
+      const detailsText = `<strong>Diagnosis:</strong> ${condition}<br><br><strong>Signs:</strong> ${signs}<br><br><strong>Solution:</strong> ${solutionText}`;
+
+      const modalBody = document.getElementById('modal-body');
+      modalBody.innerHTML = detailsText;
+
+      const modal = document.getElementById('diagnosis-modal');
+      modal.style.display = 'flex';  // Show the modal
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('diagnosis-modal');
+      modal.style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>
